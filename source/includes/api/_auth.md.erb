@@ -1,0 +1,74 @@
+# Auth
+
+All API calls to authenticate or deauthenticate a user.
+
+## Login
+
+The `login` API call authenticates a user and returns an acces token. If the `remember` parameter is passed, the API call also returns a refresh token.
+
+### HTTP Request
+
+>Example request with refresh token flag.
+
+```shell
+curl \
+-X POST \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-d '{"email":"my@email.com","password":"password1234","remember":true}'
+```
+
+`POST http://endpoint-url.com/api/login`
+
+### Query Parameters
+
+Parameter | Required | Description
+--------- | -------- | -----------
+`email` | true | The users email is the authentication identifier
+`password` | true | The users password
+`remember` | false | Pass this parameter if the API call should return a refresh token
+
+### Response
+
+#### Success
+
+Status code `204`
+
+<aside class="notice">The login API call response has an empty content</aside>
+
+#### Error
+
+>Possible validation error response
+
+```json
+{
+  "email": [
+    "required"
+  ],
+  "password": [
+    "required"
+  ]
+}
+```
+
+Possible error status codes:
+
+ * `401`
+ * `422`
+ * `500`
+
+## Authenticated User
+
+Returns the authenticated user. You need to pass a valid access token.
+
+### HTTP Request
+
+>Example request with access token header
+
+```shell
+curl \
+-X GET \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN"
+```
