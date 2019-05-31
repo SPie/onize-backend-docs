@@ -1,0 +1,194 @@
+# User
+
+Documentation for all user related API calls.
+
+## Register
+
+The register API call creates a new user with a specified email address and a password. The user doesn't have to be authenticated for this call.
+The register API call authenticates the user.
+
+### HTTP Request
+
+>Example request for creating a new user
+
+```shell
+curl \
+-X POST \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-d '{"email":"my@email.com","password":"password1234","passwordConfim":"password1234"}' \
+https://api-endpoint.com/api/users
+```
+
+`POST /api/users`
+
+### Query Parameters
+
+Parameter | Required | Description
+--------- | -------- | -----------
+`email` | true | The users email is the authentication identifier
+`password` | true | The users password
+`passwordConfirm` | true | The password confirmation and password parameter should be the same 
+
+### Response
+
+#### Success
+
+>Example user response
+
+```shell
+{
+  "user": {
+    "id": 1,
+    "email": "example@email.com",
+    "createdAt": {
+      "date": "1970-01-01 00:00:00.000000",
+      "timezone_type": 3,
+      "timezone": "UTC"
+    },
+    "updatedAt": {
+      "date": "1970-01-01 00:00:00.000000",
+      "timezone_type": 3,
+      "timezone": "UTC"
+    },
+    "deletedAt: null
+  }
+}
+```
+
+Status code `201`
+
+The successful API call returns the created `user`.
+
+#### Error
+
+>Possible validation errors
+
+```shell
+{
+  "email": [
+    "validation.email",
+    "validation.required",
+    "validation.unique"
+  ],
+  "password": [
+    "validation.required",
+    "validation.min.string",
+  ],
+  "passwordConfirm": [
+    "validation.required",
+    "validation.same"
+  ]
+}
+```
+
+Possible error status codes:
+
+ * `403`
+ * `422`
+ * `500`
+
+Possible validation errors | Description
+-------------------------- | -----------
+`email.validation.email` | The given email is not a valid email
+`email.validation.required` | The email parameter is empty
+`email.validation.unique` | The email is already taken
+`password.validation.required` | The password is empty
+`password.validation.min.string` | The password has to have at least 8 characters
+`passwordConfirm.validation.required` | The password confirmation is empty
+`passwordConfirm.validation.same` | Password and password confirmation have to be the same
+
+## Change password
+
+The change password API call is used to change the password of the authenticated user.
+
+### HTTP Request
+
+>Example change password request
+
+```shell
+curl \
+-X PATCH \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN"
+-d '{"password":"password4321","passwordConfirm":"password4321","currentPassword":"password1234"}' \
+https://api-endpoint.com/api/users
+```
+
+`PATCH /api/users`
+
+### Request Parameters
+
+Parameter | Required | Description
+--------- | -------- | -----------
+`password` | true | The new password
+`passwordConfirm` | true | The confirmation of the new password
+`currentPassword` | true | The current password of the authenticated user
+
+### Response
+
+#### Success
+
+Status code `200`
+
+>Example user response
+
+```shell
+{
+  "user": {
+    "id": 1,
+    "email": "example@email.com",
+    "createdAt": {
+      "date": "1970-01-01 00:00:00.000000",
+      "timezone_type": 3,
+      "timezone": "UTC"
+    },
+    "updatedAt": {
+      "date": "1970-01-01 00:00:00.000000",
+      "timezone_type": 3,
+      "timezone": "UTC"
+    },
+    "deletedAt: null
+  }
+}
+```
+
+The change password API call returns an `user` object.
+
+#### Error
+
+Possible error status codes:
+
+ * `401`
+ * `403`
+ * `422`
+ * `500`
+
+>Possible validation errors
+
+```shell
+{
+  "password": [
+    "validation.required",
+    "validation.min.string"
+  ],
+  "passwordConfirm": [
+    "validation.required",
+    "validation.same"
+  ],
+  "currentPassword": [
+    "validation.required",
+    "validation.password.current"
+  ]
+}
+```
+
+Possible validation errors | Description
+-------------------------- | -----------
+`password.validation.required` | The new password parameter is empty
+`password.validation.min.string` | The new password has to have at least 8 characters
+`passwordConfirm.validation.required` | The password confirmation is empty
+`passwordConfirm.validation.same` | Password and password confirmation have to be the same
+`currentPassword.validation.required` | The current password is empty
+`currentPassword.validation.password.current` | The current password is not correct

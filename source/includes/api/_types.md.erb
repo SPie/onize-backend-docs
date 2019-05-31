@@ -1,0 +1,42 @@
+# Types
+
+## User
+
+>Example user
+
+```shell
+{
+  "user": {
+    "id": 1,
+    "email": "example@email.com",
+    "createdAt": {
+      "date": "1970-01-01 00:00:00.000000",
+      "timezone_type": 3,
+      "timezone": "UTC"
+    },
+    "updatedAt": {
+      "date": "1970-01-01 00:00:00.000000",
+      "timezone_type": 3,
+      "timezone": "UTC"
+    },
+    "deletedAt: null
+  }
+}
+```
+
+Field name | Type | Required
+---------- | ---- | --------
+`user.id` | Integer | yes
+`user.email` | String | yes
+`user.createdAt` | DateTime | no
+`user.createdAt.date` | String | no
+`user.createdAt.timezone_type` | Integer | no
+`user.createdAt.timezone` | String | no
+`user.updatedAt` | DateTime | no
+`user.updatedAt.date` | String | no
+`user.updatedAt.timezone_type` | Integer | no
+`user.updatedAt.timezone` | String | no
+`user.deletedAt` | DateTime | no
+`user.deletedAt.date` | String | no
+`user.deletedAt.timezone_type` | Integer | no
+`user.deletedAt.timezone` | String | no

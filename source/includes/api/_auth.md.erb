@@ -15,10 +15,11 @@ curl \
 -X POST \
 -H "Content-Type: application/json" \
 -H "Accept: application/json" \
--d '{"email":"my@email.com","password":"password1234","remember":true}'
+-d '{"email":"my@email.com","password":"password1234","remember":true}' \
+https://api-endpoint.com/api/auth/login
 ```
 
-`POST http://endpoint-url.com/api/login`
+`POST /api/login`
 
 ### Query Parameters
 
@@ -31,6 +32,9 @@ Parameter | Required | Description
 ### Response
 
 #### Success
+
+How the access and refresh token are returned depends on the `TokenProvider` specified for the tokens.
+For example they can be returned as `Authorization` and `Set-cookie` headers.
 
 Status code `204`
 
@@ -54,8 +58,14 @@ Status code `204`
 Possible error status codes:
 
  * `401`
+ * `403`
  * `422`
  * `500`
+
+Possible validation errors | Description
+-------------------------- | -----------
+`email.required` | The email parameter is empty
+`password.required` | The password parameter is empty
 
 ## Authenticated User
 
@@ -71,4 +81,115 @@ curl \
 -H "Content-Type: application/json" \
 -H "Accept: application/json" \
 -H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN"
+https://api-endpoint.com/api/auth/user
 ```
+
+`GET /api/auth/user`
+
+### Response
+
+#### Success
+
+>Example Response on success
+
+```shell
+{
+  "user": {
+    "id": 1,
+    "email": "example@email.com",
+    "createdAt": {
+      "date": "1970-01-01 00:00:00.000000",
+      "timezone_type": 3,
+      "timezone": "UTC"
+    },
+    "updatedAt": {
+      "date": "1970-01-01 00:00:00.000000",
+      "timezone_type": 3,
+      "timezone": "UTC"
+    },
+    "deletedAt: null
+  }
+}
+```
+
+Status code `200`
+
+The response will contain a `user` object.
+
+#### Error
+
+Possible error status codes:
+
+ * `401`
+ * `403`
+ * `500`
+
+## Refresh Access Token
+
+If the client has a valid refresh token, it can be used to get a new valid access token to get the authenticated user.
+
+### HTTP Request
+
+>Example Request with valid refresh token from cookie
+
+```shell
+curl \
+-X GET \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-H "Cookie: refresh-token=EXAMPLE_REFRESH_TOKEN" \
+https://api-endpoint.com/api/auth/refresh
+```
+
+`GET /api/auth/refresh`
+
+### Response
+
+#### Success
+Status code `204`
+
+<aside class="notice">The refresh access token API call response has an empty content</aside>
+
+#### Error
+
+Possible error status codes:
+
+ * `401`
+ * `403`
+ * `500`
+
+## Logout
+
+This call deauthenticates the user and revokes the access and refresh token.
+You need to pass a valid access token to make this call.
+
+### HTTP Request
+
+>Example Request
+
+```shell
+curl \
+-X POST \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN"
+https://api-endpoint.com/api/auth/logout
+```
+
+`POST /api/auth/logout`
+
+### Response
+
+#### Success
+
+Status code `204`
+
+<aside class="notice">The logout token API call response has an empty content</aside>
+
+#### Error
+
+Possible error status codes:
+
+ * `401`
+ * `403`
+ * `500`
