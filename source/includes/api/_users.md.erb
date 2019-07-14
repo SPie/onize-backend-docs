@@ -192,3 +192,177 @@ Possible validation errors | Description
 `passwordConfirm.validation.same` | Password and password confirmation have to be the same
 `currentPassword.validation.required` | The current password is empty
 `currentPassword.validation.password.current` | The current password is not correct
+
+## Start Password Reset Flow
+
+Initiates the password reset flow, creating a reset token and send it to the event queue.
+
+>Example start password reset request
+
+```shell
+curl \
+-X POST \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-d '{"email":"email@example.com"}' \
+https://api-endpoint.com/api/password-reset
+```
+
+`POST /api/password-reset`
+
+### Request Parameters
+
+Parameter | Required | Description
+--------- | -------- | -----------
+`email` | true | The users email
+
+### Response
+
+#### Success
+
+Status code `204`
+
+The start password reset API call has an empty response.
+
+#### Error
+
+Possible error status codes:
+
+ * `422`
+ * `500`
+
+>Possible validation errors
+
+```shell
+{
+  "email": [
+    "validation.required",
+    "validation.email"
+  ]
+}
+```
+
+Possible validation errors | Description
+-------------------------- | -----------
+`email.validation.required` | The email parameter is empty
+`email.validation.email` | The email parameter has to be a valid email address
+
+## Verify password reset token
+
+Call to verify the created token to reset the users password.
+
+>Example verify password reset token request
+
+```shell
+curl \
+-X GET \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-d '{"resetToken":"RESET_TOKEN"}' \
+https://api-endpoint.com/api/password-reset
+```
+
+`GET /api/password-reset`
+
+### Request Parameters
+
+Parameter | Required | Description
+--------- | -------- | -----------
+`resetToken` | true | The reset token to verify the user for password reset
+
+### Response
+
+#### Success
+
+Status code `204`
+
+The API call has an empty response.
+
+#### Error
+
+Possible error status codes:
+
+ * `401`
+ * `422`
+ * `500`
+
+>Possible validation errors
+
+```shell
+{
+  "resetToken": [
+    "validation.required",
+  ]
+}
+```
+
+Possible validation errors | Description
+-------------------------- | -----------
+`resetToken.validation.required` | The resetToken parameter is empty
+
+## Reset password
+
+API call to reset password if valid token is given.
+
+>Example password reset request
+
+```shell
+curl \
+-X PATCH \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-d '{"resetToken":"RESET_TOKEN","password":"password1234","passwordConfirm":"password1234"}' \
+https://api-endpoint.com/api/password-reset
+```
+
+`PATCH /api/password-reset`
+
+### Request Parameters
+
+Parameter | Required | Description
+--------- | -------- | -----------
+`resetToken` | true | The reset token to verify the user for password reset
+`password` | true | The new password
+`passwordConfirm` | true | The password confirmation and the password should be the same
+
+### Response
+
+#### Success
+
+Status code `204`
+
+The API call has an empty response.
+
+#### Error
+
+Possible error status codes:
+
+ * `401`
+ * `422`
+ * `500`
+
+>Possible validation errors
+
+```shell
+{
+  "resetToken": [
+    "validation.required",
+  ],
+  "password": [
+    "validation.required",
+    "validation.min.string"
+  ],
+  "passwordConfirm": [
+    "validation.required",
+    "validation.same"
+  ]
+}
+```
+
+Possible validation errors | Description
+-------------------------- | -----------
+`resetToken.validation.required` | The resetToken parameter is empty
+`password.validation.required` | The password parameter is empty
+`password.validation.min.string` | The password has to have at least 8 characters 
+`passwordConfirm.validation.required` | The password confirm parameter is empty
+`passwordConfirm.validation.same` | Password and password confirmation have to be the same
