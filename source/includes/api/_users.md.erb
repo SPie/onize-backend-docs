@@ -204,7 +204,7 @@ curl \
 -X POST \
 -H "Content-Type: application/json" \
 -H "Accept: application/json" \
--d '{"email":"email@example.com"}' \
+-d '{"email":"email@example.com","finishUrl":"https://example-frontend.com"}' \
 https://api-endpoint.com/api/password-reset
 ```
 
@@ -215,6 +215,7 @@ https://api-endpoint.com/api/password-reset
 Parameter | Required | Description
 --------- | -------- | -----------
 `email` | true | The users email
+`finishUrl` | true | The URL to finish the password reset flow
 
 ### Response
 
@@ -238,6 +239,9 @@ Possible error status codes:
   "email": [
     "validation.required",
     "validation.email"
+  ],
+  "finishUrl": [
+    "validation.required"
   ]
 }
 ```
@@ -246,6 +250,7 @@ Possible validation errors | Description
 -------------------------- | -----------
 `email.validation.required` | The email parameter is empty
 `email.validation.email` | The email parameter has to be a valid email address
+`finishUrl.validation.required` | The finishUrl parameter is empty
 
 ## Verify password reset token
 
