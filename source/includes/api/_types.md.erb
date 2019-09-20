@@ -40,3 +40,46 @@ Field name | Type | Required
 `user.deletedAt.date` | String | no
 `user.deletedAt.timezone_type` | Integer | no
 `user.deletedAt.timezone` | String | no
+
+## Project
+
+>Example project
+
+```shell
+{
+  "id": 1,
+  "identifier": "project1",
+  "label": "Project 1",
+  "user": {
+    ...
+  },
+  "description": "The first project",
+  "createdAt": {
+    "date": "1970-01-01 00:00:00.000000",
+    "timezone_type": 3,
+    "timezone": "UTC"
+  },
+  "updatedAt": {
+    "date": "1970-01-01 00:00:00.000000",
+    "timezone_type": 3,
+    "timezone": "UTC"
+  },
+  "deletedAt": null
+}
+```
+
+Field name | Type | Required
+---------- | ---- | --------
+`project.id` | Integer | yes
+`project.identifier` | String | yes
+`project.label` | String | yes
+`project.user` | [User](#user) | yes
+`project.description` | String | no
+`project.createdAt` | DateTime | no
+`project.createdAt.date` | String | no
+`project.createdAt.timezone_type` | Integer | no
+`project.createdAt.timezone` | String | no
+`project.updatedAt` | DateTime | no
+`project.updatedAt.date` | String | no
+`project.updatedAt.timezone_type` | Integer | no
+`project.updatedAt.timezone` | String | no
