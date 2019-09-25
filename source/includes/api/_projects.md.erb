@@ -37,11 +37,10 @@ Status code `200`
 {
   "projects": [
     {
-      "id": 1,
-      "identifier": "project1",
+      "uuid": "0123-4567-89ab-cdef",
       "label": "Project 1",
       "user": {
-        ...
+        User
       },
       "description": "The first project",
       "createdAt": {
@@ -69,3 +68,77 @@ Possible error status codes:
  * `401`
  * `403`
  * `500`
+
+## Add
+
+The Add API call creates a new Project for the authenticated user. Possible parameters are a required label and a optional description. A UUID gets created automatically.
+
+### HTTP Request
+
+>Example request for adding a project
+
+```shell
+curl
+-X POST
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN"
+-d '{"label":"Project1","description":"This is the first project"}'
+https://api-endpoint.com/api/projects
+```
+
+`POST /api/projects`
+
+### Request Parameters 
+
+Parameter | Required | Description
+--------- | -------- | -----------
+`label` | true | Name of the Project
+`description` | false | Some describing text for the project
+
+### Response
+
+#### Success
+
+>Example project response
+
+```shell
+{
+  "project": {
+    "uuid": "0123-4567-89ab-cdef",
+    "label": "Project1",
+    "user": {
+      User
+    },
+    "description": "This is the first project",
+    "createdAt": {
+      "date": "1970-01-01 00:00:00.000000",
+      "timezone_type": 3,
+      "timezone": "UTC"
+    },
+    "updatedAt": {
+      "date": "1970-01-01 00:00:00.000000",
+      "timezone_type": 3,
+      "timezone": "UTC"
+    },
+    "deletedAt": null
+  }
+}
+```
+
+Status code `201`
+
+If the creation was successful, the API will return the created project.
+
+#### Error
+
+Possible error status codes:
+
+ * `401`
+ * `403`
+ * `422`
+ * `500`
+
+ Possible validation errors | Description
+ -------------------------- | -----------
+ `label.validation.required` | The label parameter is empty
