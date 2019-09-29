@@ -139,6 +139,52 @@ Possible error status codes:
  * `422`
  * `500`
 
- Possible validation errors | Description
- -------------------------- | -----------
- `label.validation.required` | The label parameter is empty
+Possible validation errors | Description
+-------------------------- | -----------
+`label.validation.required` | The label parameter is empty
+
+## Remove
+ 
+The Remove API call removes a poject, specified by the UUID. The project wont't be deleted from the database entirely, but marked as soft deleted.
+
+>Example request for removing a project
+
+```shell
+curl
+-X DELETE
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN"
+-d '{"uuid":"0123-4567-89ab-cdef"}'
+https://api-endpoint.com/api/projects
+```
+
+`DELETE /api/projects`
+
+### Request Parameters
+
+Parameter | Required | Description
+--------- | -------- | -----------
+`uuid` | true | The unique identifier for the project to remove
+
+### Response
+
+#### Success
+
+Status code `204`
+
+The API call doesn't respond any data.
+
+#### Error
+
+Possible error status codes:
+
+ * `401`
+ * `403`
+ * `404`
+ * `422`
+ * `500`
+
+Possible validation errors | Description
+-------------------------- | -----------
+`uuid.validation.required` | The uuid parameter is empty
