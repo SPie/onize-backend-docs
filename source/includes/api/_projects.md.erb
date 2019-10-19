@@ -15,7 +15,7 @@ curl
 -X GET
 -H "Content-Type: application/json" \
 -H "Accept: application/json" \
--H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN"
+-H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN" \
 https://api-endpoint.com/api/projects
 ```
 
@@ -82,8 +82,8 @@ curl
 -X POST
 -H "Content-Type: application/json" \
 -H "Accept: application/json" \
--H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN"
--d '{"label":"Project1","description":"This is the first project"}'
+-H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN" \
+-d '{"label":"Project1","description":"This is the first project"}' \
 https://api-endpoint.com/api/projects
 ```
 
@@ -154,8 +154,8 @@ curl
 -X DELETE
 -H "Content-Type: application/json" \
 -H "Accept: application/json" \
--H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN"
--d '{"uuid":"0123-4567-89ab-cdef"}'
+-H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN" \
+-d '{"uuid":"0123-4567-89ab-cdef"}' \
 https://api-endpoint.com/api/projects
 ```
 
@@ -188,3 +188,55 @@ Possible error status codes:
 Possible validation errors | Description
 -------------------------- | -----------
 `uuid.validation.required` | The uuid parameter is empty
+
+## Invite
+
+This API call is used to initiate a project invite for a user. The user who invites another user has to have rights to invite. The invited user is not allowed to be already a member or the owner of the project. If the API call was successful, the invited user will get an email with a invitation link, provided within the request and a generated token. The invitation URL has to contain a specified placeholder for the token.
+
+>Example request for initiating an invite
+
+```shell
+curl
+-X POST
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN" \
+-d '{"uuid":"0123-4567-89ab-cdef","email":"example@email.com","inviteUrl":"https://frontend-url.com/finish-invite?token=TOKEN"}' \
+https://api-endpoint.com/api/projects/invites
+```
+
+`POST /api/projects/invites`
+
+### Request Parameters
+
+Parameter | Required | Description
+--------- | -------- | -----------
+`uuid` | true | The UUID of the project, the user should be invited to
+`email` | true | The email of the invited user
+`inviteUrl` | true | The URL for finishing the invitation flow. Has to contain a specified placeholder
+
+### Respons
+
+#### Success
+
+Status code `201`
+
+The API call doesn't respond any data.
+
+#### Error
+
+Possible error status codes:
+
+ * `401`
+ * `403`
+ * `404`
+ * `409`
+ * `422`
+ * `500`
+
+Possible validation errors | Description
+-------------------------- | -----------
+`uuid.validation.required` | The UUID parameter is empty
+`email.validation.required` | The email parameter is empty
+`email.validation.email` | The given email is invalid
+`inviteUrl.validation.required` | The invite URL parameter is empty
