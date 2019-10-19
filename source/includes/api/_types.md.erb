@@ -9,6 +9,14 @@
   "user": {
     "uuid": "0123-4567-89ab-cdef",
     "email": "example@email.com",
+    "projects": [
+      Project,
+      Project
+    ],
+    "joinedProjects": [
+      {Project},
+      {Project}
+    ],
     "createdAt": {
       "date": "1970-01-01 00:00:00.000000",
       "timezone_type": 3,
@@ -28,6 +36,8 @@ Field name | Type | Required
 ---------- | ---- | --------
 `user.uuid` | String | yes
 `user.email` | String | yes
+`user.projects` | Array - [Project](#project) | no
+`user.joinedProjects` | Array - [Project](#project) | no
 `user.createdAt` | DateTime | no
 `user.createdAt.date` | String | no
 `user.createdAt.timezone_type` | Integer | no
@@ -49,10 +59,16 @@ Field name | Type | Required
 {
   "uuid": "0123-4567-89ab-cdef",
   "label": "Project 1",
-  "user": {
-    User
-  },
+  "user": {User},
   "description": "The first project",
+  "members": [
+    {User},
+    {User}
+  ],
+  "projectInvites": [
+    {ProjectInvite},
+    {ProjectInvite}
+  ],
   "createdAt": {
     "date": "1970-01-01 00:00:00.000000",
     "timezone_type": 3,
@@ -73,6 +89,8 @@ Field name | Type | Required
 `project.label` | String | yes
 `project.user` | [User](#user) | yes
 `project.description` | String | no
+`project.members` | Array - [User](#user) | no
+`project.projectInvites` | Array - [ProjectInvite](#projectInvite) | no
 `project.createdAt` | DateTime | no
 `project.createdAt.date` | String | no
 `project.createdAt.timezone_type` | Integer | no
@@ -81,3 +99,43 @@ Field name | Type | Required
 `project.updatedAt.date` | String | no
 `project.updatedAt.timezone_type` | Integer | no
 `project.updatedAt.timezone` | String | no
+
+## ProjectInvite
+
+>Example project invite
+
+```shell
+{
+  "uuid": "0123-4567-89ab-cdef",
+  "token": "TOKEN",
+  "email": "example@email.com",
+  "project": {
+    Project
+  },
+  "createdAt": {
+    "date": "1970-01-01 00:00:00.000000",
+    "timezone_type": 3,
+    "timezone": "UTC"
+  },
+  "updatedAt": {
+    "date": "1970-01-01 00:00:00.000000",
+    "timezone_type": 3,
+    "timezone": "UTC"
+  }
+}
+```
+
+Field name | Type | Required
+---------- | ---- | --------
+`projectInvite.uuid` | String | yes
+`projectInvite.token` | string | yes
+`projectInvite.email` | string | yes
+`projectInvite.project` | [Project](#project) | yes
+`projectInvite.createdAt` | DateTime | no
+`projectInvite.createdAt.date` | String | no
+`projectInvite.createdAt.timezone_type` | Integer | no
+`projectInvite.createdAt.timezone` | String | no
+`projectInvite.updatedAt` | DateTime | no
+`projectInvite.updatedAt.date` | String | no
+`projectInvite.updatedAt.timezone_type` | Integer | no
+`projectInvite.updatedAt.timezone` | String | no
