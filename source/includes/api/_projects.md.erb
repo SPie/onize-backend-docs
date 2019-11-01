@@ -11,8 +11,8 @@ This API call lists all projects owned by the authenticated user or returns an e
 >Example request for list projects
 
 ```shell
-curl
--X GET
+curl \
+-X GET \
 -H "Content-Type: application/json" \
 -H "Accept: application/json" \
 -H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN" \
@@ -69,6 +69,80 @@ Possible error status codes:
  * `403`
  * `500`
 
+## Details
+
+This Api call returns the project for the requested UUID.
+
+### Http Request
+
+>Example request for project details
+
+```shell
+curl \
+-X GET \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN" \
+https://api-endpoint.com/api/projects/0123-4567-89ab-cdef
+```
+
+`GET /api/projects/{UUID}`
+
+### Request Parameters
+
+Parameter | Required | Description
+--------- | -------- | -----------
+`uuid` | true | The projects UUID as URL parameter
+
+### Response
+
+#### Success
+
+>Example project response
+
+```shell
+{
+  "project": {
+    "uuid": "0123-4567-89ab-cdef",
+    "label": "Project1",
+    "user": {
+      {User}
+    },
+    "description": "This is the first project",
+    "members": [
+      {User}
+    ],
+    "projectInvites": [
+      {Projectinvite}
+    ],
+    "createdAt": {
+      "date": "1970-01-01 00:00:00.000000",
+      "timezone_type": 3,
+      "timezone": "UTC"
+    },
+    "updatedAt": {
+      "date": "1970-01-01 00:00:00.000000",
+      "timezone_type": 3,
+      "timezone": "UTC"
+    },
+    "deletedAt": null
+  }
+}
+```
+
+Status code `200`
+
+If the creation was successful, the API will return the created project.
+
+#### Error
+
+Possible error status codes:
+
+ * `401`
+ * `403`
+ * `404`
+ * `500`
+
 ## Add
 
 The Add API call creates a new Project for the authenticated user. Possible parameters are a required label and a optional description. A UUID gets created automatically.
@@ -78,8 +152,8 @@ The Add API call creates a new Project for the authenticated user. Possible para
 >Example request for adding a project
 
 ```shell
-curl
--X POST
+curl \
+-X POST \
 -H "Content-Type: application/json" \
 -H "Accept: application/json" \
 -H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN" \
@@ -150,8 +224,8 @@ The Remove API call removes a poject, specified by the UUID. The project wont't 
 >Example request for removing a project
 
 ```shell
-curl
--X DELETE
+curl \
+-X DELETE \
 -H "Content-Type: application/json" \
 -H "Accept: application/json" \
 -H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN" \
@@ -189,6 +263,64 @@ Possible validation errors | Description
 -------------------------- | -----------
 `uuid.validation.required` | The uuid parameter is empty
 
+## Create meta data elements
+
+This API call is used to create meta data elements for a members of a project. You can decide which meta data element is required and which should be shown in member lists. The position parameter is used to arange the order of the meta data elements in a detailed view.
+
+>Example request for creating meta data elements
+
+```shell
+curl \
+-X POST \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN" \
+-d '{"uuid":"0123-4567-89ab-cdef","metaDataElements":[{"name":"firstname","required":true,"inList":true,"position":0}]}' \
+https://api-endpoint.com/api/projects/meta-data-elements
+```
+`POST /api/projects/meta-data-elements`
+
+### Request Parameters
+
+Parameter | Required | Description
+--------- | -------- | -----------
+`uuid` | true | The UUID of the project, the meta data elements should be created for
+`metaDataElements` | true | The array of meta data elements to create
+`metaDataElement.*.name` | true | The unique name for the meta data element
+`metaDataElement.*.required` | true | Indicates if the meta data element is required for project members
+`metaDataElement.*.inList` | true | Indicates if the meta data element should be shown in the members list
+`metaDataElement.*.position` | true | The order position of the meta data element in a detailed view
+
+### Response
+
+#### Success
+
+Status code `201`
+
+The API call doesn't respond any data.
+
+#### Error
+
+ * `401`
+ * `403`
+ * `404`
+ * `422`
+ * `500`
+
+Possible validation errors | Description
+-------------------------- | -----------
+`uuid.validation.required` | The UUID parameter is empty
+`metaDataElements.validation.required` | The meta data elements parameter is empty
+`metaDataElements.validation.array` | The meta data elements parameter is not an array
+`metaDataElements.*.name.validation.required` | The name of a meta data element is empty
+`metaDataElements.*.name.validation.string` | The name of a meta data element is not a valid string
+`metaDataElements.*.required.validation.required` | The required parameter of a meta data element is empty
+`metaDataElements.*.required.validation.boolean` | The required parameter of a meta data element is not a valid boolean
+`metaDataElements.*.inList.validation.required` | The inList parameter of a meta data element is empty
+`metaDataElements.*.inList.validation.boolean` | The inList parameter of a meta data element is not a valid boolean
+`metaDataElements.*.position.validation.required` | The position parameter of a meta data element is empty
+`metaDataElements.*.position.validation.integer` | The position parameter of a meta data element is not a valid integer
+
 ## Invite
 
 This API call is used to initiate a project invite for a user. The user who invites another user has to have rights to invite. The invited user is not allowed to be already a member or the owner of the project. If the API call was successful, the invited user will get an email with a invitation link, provided within the request and a generated token. The invitation URL has to contain a specified placeholder for the token.
@@ -196,8 +328,8 @@ This API call is used to initiate a project invite for a user. The user who invi
 >Example request for initiating an invite
 
 ```shell
-curl
--X POST
+curl \
+-X POST \
 -H "Content-Type: application/json" \
 -H "Accept: application/json" \
 -H "Authorization: Bearer EXAMPLE_ACCESS_TOKEN" \
